@@ -133,6 +133,20 @@ static const wl_keyboard_listener KeyboardDispatch={
 	.repeat_info=KeyboardRepeat
 };
 
+static void MouseFocused(void *userData,wl_pointer *mouse,std::uint32_t serial,wl_surface *surface,wl_fixed_t surfaceX,wl_fixed_t surfaceY) { }
+static void MouseUnfocused(void *userData,wl_pointer *mouse,std::uint32_t serial,wl_surface *surface) { }
+static void MouseMoved(void *userData,wl_pointer *mouse,std::uint32_t time,wl_fixed_t surfaceX,wl_fixed_t surfaceY)
+{
+	std::cout << "X: " << wl_fixed_to_double(surfaceX) << ", Y: " << wl_fixed_to_double(surfaceY) << std::endl;
+
+}
+
+static const wl_pointer_listener MouseDispatch={
+	.enter=MouseFocused,
+	.leave=MouseUnfocused,
+	.motion=MouseMoved
+};
+
 int main()
 {
 	enum class ExitCode
@@ -183,6 +197,9 @@ int main()
 
 		auto keyboard=wl_seat_get_keyboard(inputSeat);
 		wl_keyboard_add_listener(keyboard,&KeyboardDispatch,nullptr);
+
+		auto mouse=wl_seat_get_pointer(inputSeat);
+		wl_pointer_add_listener(mouse,&MouseDispatch,nullptr);
 
 		while (live && wl_display_dispatch(display));
 
