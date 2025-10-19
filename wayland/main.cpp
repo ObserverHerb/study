@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include "wayland-xdg-shell-client-protocol.h"
 #include "wayland-xdg-decoration-v1-client-protocol.h"
+#include "wayland-xdg-pointer-warp-v1-client-protocol.h"
 
 // https://wayland.freedesktop.org/docs/html/apa.html
 wl_display *display;
@@ -16,6 +17,7 @@ wl_surface *surface;
 wl_shm *sharedMemoryInterface;
 wl_buffer *sharedMemoryBuffer;
 wl_seat *inputSeat;
+wp_pointer_warp_v1 *mouseWarp;
 xdg_wm_base *windowManager;
 zxdg_decoration_manager_v1 *windowDecorationManager;
 std::mt19937 generator;
@@ -46,6 +48,10 @@ void AddRegistryGlobal(void *userData,wl_registry *registry,std::uint32_t nameID
 	if (haystack.contains("wl_seat"))
 	{
 		inputSeat=static_cast<wl_seat*>(wl_registry_bind(registry,nameID,&wl_seat_interface,1));
+	}
+	if (haystack.contains("wp_pointer_warp_v1"))
+	{
+		mouseWarp=static_cast<wp_pointer_warp_v1*>(wl_registry_bind(registry,nameID,&wp_pointer_warp_v1_interface,1));
 	}
 }
 
@@ -133,12 +139,16 @@ static const wl_keyboard_listener KeyboardDispatch={
 	.repeat_info=KeyboardRepeat
 };
 
-static void MouseFocused(void *userData,wl_pointer *mouse,std::uint32_t serial,wl_surface *surface,wl_fixed_t surfaceX,wl_fixed_t surfaceY) { }
+std::uint32_t mouseFocusSerial;
+static void MouseFocused(void *userData,wl_pointer *mouse,std::uint32_t serial,wl_surface *surface,wl_fixed_t surfaceX,wl_fixed_t surfaceY)
+{
+	mouseFocusSerial=serial;
+}
 static void MouseUnfocused(void *userData,wl_pointer *mouse,std::uint32_t serial,wl_surface *surface) { }
 static void MouseMoved(void *userData,wl_pointer *mouse,std::uint32_t time,wl_fixed_t surfaceX,wl_fixed_t surfaceY)
 {
 	std::cout << "X: " << wl_fixed_to_double(surfaceX) << ", Y: " << wl_fixed_to_double(surfaceY) << std::endl;
-
+	wp_pointer_warp_v1_warp_pointer(mouseWarp,surface,mouse,wl_fixed_from_int(width/2),wl_fixed_from_int(height/2),mouseFocusSerial);
 }
 
 static const wl_pointer_listener MouseDispatch={

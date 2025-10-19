@@ -27,6 +27,12 @@ ecm_add_wayland_client_protocol( # https://redstrate.com/blog/2023/07/how-to-use
 	PROTOCOL
 	${WaylandProtocols_DATADIR}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml
 )
+ecm_add_wayland_client_protocol( # https://gitlab.freedesktop.org/wayland/wayland-protocols/-/merge_requests/337, https://wayland.app/protocols/pointer-warp-v1
+	XDG_SOURCES
+	BASENAME xdg-pointer-warp-v1
+	PROTOCOL
+	${WaylandProtocols_DATADIR}/staging/pointer-warp/pointer-warp-v1.xml
+)
 add_executable(playland main.cpp ${XDG_SOURCES})
 
 target_link_libraries(playland PUBLIC Wayland::Client)
