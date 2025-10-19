@@ -6,7 +6,7 @@
 #include <iostream>
 #include <sys/mman.h>
 #include <unistd.h>
-#include "wayland-xdg-shell-client-protocol.h" // FIXME: don't put this in build
+#include "wayland-xdg-shell-client-protocol.h"
 #include "wayland-xdg-decoration-v1-client-protocol.h"
 
 // https://wayland.freedesktop.org/docs/html/apa.html
