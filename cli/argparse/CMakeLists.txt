@@ -9,7 +9,6 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # for clangd, so it knows we're using C++23
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON) # includes build directory for generated xdg headers
 find_package(Boost COMPONENTS program_options REQUIRED)
 
 add_executable(args main.cpp)
