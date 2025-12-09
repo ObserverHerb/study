@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.31)
+cmake_minimum_required(VERSION 4.00)
 project(Playland
 	VERSION 0.1
 	LANGUAGES C CXX
@@ -34,6 +34,10 @@ ecm_add_wayland_client_protocol( # https://gitlab.freedesktop.org/wayland/waylan
 	${WaylandProtocols_DATADIR}/staging/pointer-warp/pointer-warp-v1.xml
 )
 add_executable(playland main.cpp ${XDG_SOURCES})
-
 target_link_libraries(playland PUBLIC Wayland::Client)
+add_executable(loopy_ring loopy_ring.cpp ${XDG_SOURCES})
+target_link_libraries(loopy_ring PUBLIC Wayland::Client)
+add_executable(helios helios.cpp ${XDG_SOURCES})
+target_link_libraries(helios PUBLIC Wayland::Client)
+
 
