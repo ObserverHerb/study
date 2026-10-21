@@ -1,3 +1,6 @@
+// drawing to mode 13h example
+// using SMPTE test bar pattern
+
 #include <dpmi.h>
 #include <go32.h>
 #include <array>
